@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const express = require('express');
 const enrouten = require('express-enrouten');
+const cors = require('cors');
 const sequelize = require('./database/sequelize');
 const config = require('../config');
 const httpStatus = require('./libs/constants/httpStatus');
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || config.PORT;
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 app.use('/', enrouten({ directory: 'routes' }));
 app.use('*', (req, res) => responseBuilder(res, 'path not implemented', httpStatus.NOT_IMPLEMENTED));
 
