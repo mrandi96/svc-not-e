@@ -102,7 +102,7 @@ exports.getShopInvoiceDetails = async (req, res) => {
       if (productInsertMode === 'inside') {
         productName = String(Product.productName);
         productPrice = Number(Product.productPrice);
-      };
+      }
       return {
         invoiceProductId,
         productName,

@@ -7,13 +7,26 @@ const Country = sequelize.define('Country', {
     primaryKey: true,
     autoIncrement: true
   },
-  countryName: {
+  iso: {
+    type: DataTypes.CHAR(2),
+    allowNull: false
+  },
+  iso3: {
+    type: DataTypes.CHAR(3)
+  },
+  name: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  phonePrefix: {
+  niceName: {
     type: DataTypes.STRING,
-    defaultValue: ''
+    allowNull: false
+  },
+  numCode: {
+    type: DataTypes.INTEGER
+  },
+  phonePrefix: {
+    type: DataTypes.STRING
   }
 }, {
   tableName: 'country'

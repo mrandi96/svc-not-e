@@ -1,9 +1,9 @@
 const responseBuilder = require('../helpers/responseBuilder');
 const areaAction = require('../actions/area.action');
 
-exports.getAllCountries = async (eq, res) => {
+exports.getAllCountries = async (req, res) => {
   try {
-    const data = await areaAction.findAllCountries();
+    const data = await areaAction.findAllCountries(req.query);
 
     return responseBuilder(res, data);
   } catch (e) {
@@ -13,7 +13,7 @@ exports.getAllCountries = async (eq, res) => {
 
 exports.getOneCountry = async (req, res) => {
   try {
-    const data = await areaAction.findOneCountry();
+    const data = await areaAction.findOneCountry(req.params);
 
     return responseBuilder(res, data);
   } catch (e) {
@@ -23,7 +23,7 @@ exports.getOneCountry = async (req, res) => {
 
 exports.getAllProvinces = async (req, res) => {
   try {
-    const data = await areaAction.findAllProvinces();
+    const data = await areaAction.findAllProvinces(req.query);
 
     return responseBuilder(res, data);
   } catch (e) {
@@ -33,7 +33,7 @@ exports.getAllProvinces = async (req, res) => {
 
 exports.getOneProvince = async (req, res) => {
   try {
-    const data = await areaAction.findOneProvince();
+    const data = await areaAction.findOneProvince(req.params);
 
     return responseBuilder(res, data);
   } catch (e) {
@@ -43,7 +43,7 @@ exports.getOneProvince = async (req, res) => {
 
 exports.getAllDistrict = async (req, res) => {
   try {
-    const data = await areaAction.findAllDistricts();
+    const data = await areaAction.findAllDistricts(req.query);
 
     return responseBuilder(res, data);
   } catch (e) {
@@ -53,7 +53,7 @@ exports.getAllDistrict = async (req, res) => {
 
 exports.getOneDistrict = async (req, res) => {
   try {
-    const data = await areaAction.findOneDistrict();
+    const data = await areaAction.findOneDistrict(req.params);
 
     return responseBuilder(res, data);
   } catch (e) {

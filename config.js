@@ -4,5 +4,7 @@ module.exports = {
   DB_LOCAL: 'postgres://postgres:P@ssw0rd123@localhost:5432/tritama',
   SALT_ROUND: 10,
   JWT_SECRET_KEY: 'my#1jwTSup3rS3cr3tK3y()',
-  JWT_EXPIRE_TIME: '3h'
+  JWT_EXPIRE_TIME: '3h',
+  DEBUG_MODE: 'error',
+  PRODUCTION: false
 };

@@ -1,8 +1,9 @@
 const { Sequelize } = require('sequelize');
 const config = require('../../config');
+const debug = require('../libs/debug');
 
 const params = {
-  logging: false,
+  logging: debug,
   dialect: 'postgres',
   operatorsAliases: 0,
   dialectOptions: {
