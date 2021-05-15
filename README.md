@@ -1,5 +1,5 @@
 # svc-not-e
-This is a services for not-e appliactions
+This is a services for not-e applications
 
 How to use
 1. open folder in the terminal
