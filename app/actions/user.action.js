@@ -2,7 +2,7 @@ const { User } = require('../models');
 
 exports.createUser = async (data) => {
   await User.create(data);
-  return 'user created';
+  return 'User created';
 };
 
 exports.findAllUser = async (options) => {
@@ -17,10 +17,10 @@ exports.findOneUser = async (options) => {
 
 exports.updateUser = async (data, options) => {
   await User.update(data, { ...options });
-  return 'user updated';
+  return 'User updated';
 };
 
 exports.deleteUser = async (options) => {
   await User.destroy({ ...options });
-  return 'user deleted';
+  return 'User deleted';
 };

@@ -17,12 +17,12 @@ exports.findOneInvoice = async (options) => {
 
 exports.updateInvoice = async (data, options) => {
   await Invoice.update(data, { ...options });
-  return 'invoice updated';
+  return 'Invoice updated';
 };
 
 exports.deleteInvoice = async (options) => {
   await Invoice.destroy({ ...options });
-  return 'invoice deleted';
+  return 'Invoice deleted';
 };
 
 exports.nestedInvoice = async (shopId, invoiceId) => {

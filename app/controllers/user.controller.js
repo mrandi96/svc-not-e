@@ -20,7 +20,7 @@ exports.registerUser = async (req, res) => {
     const { email, password } = req.body;
     const userExist = await userAction.findOneUser({ where: { email } });
     if (userExist) {
-      return responseBuilder(res, 'email already registered', httpStatus.CONFLICT);
+      return responseBuilder(res, 'Email already registered', httpStatus.CONFLICT);
     }
     body = {
       ...body,
@@ -41,11 +41,11 @@ exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
     const user = await userAction.findOneUser({ where: { email, userType } });
     if (!user) {
-      return responseBuilder(res, 'user not registered', httpStatus.NOT_FOUND);
+      return responseBuilder(res, 'User not registered', httpStatus.NOT_FOUND);
     }
     const isValid = await user.isValid(password);
     if (!isValid) {
-      return responseBuilder(res, 'email/password is invalid', httpStatus.UNAUTHORIZED);
+      return responseBuilder(res, 'Email/password is invalid', httpStatus.UNAUTHORIZED);
     }
 
     const { userId, fullName, contactNumber } = user;

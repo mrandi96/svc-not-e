@@ -17,12 +17,12 @@ exports.findOneShop = async (options) => {
 
 exports.updateShop = async (data, options) => {
   await Shop.update(data, { ...options });
-  return 'shop updated';
+  return 'Shop updated';
 };
 
 exports.deleteShop = async (options) => {
   await Shop.destroy({ ...options });
-  return 'shop deleted';
+  return 'Shop deleted';
 };
 
 exports.checkShopOwner = async (shopId, ownerId) => {

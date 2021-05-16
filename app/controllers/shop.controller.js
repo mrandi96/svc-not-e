@@ -32,7 +32,7 @@ exports.ownerShopDetail = async (req, res) => {
     const { shopId } = req.params;
 
     const data = await shopAction.findOneShop({ where: { ownerId, shopId } });
-    if (!data) return responseBuilder(res, 'shop not found', httpStatus.NOT_FOUND);
+    if (!data) return responseBuilder(res, 'Shop not found', httpStatus.NOT_FOUND);
 
     return responseBuilder(res, data);
   } catch (e) {
