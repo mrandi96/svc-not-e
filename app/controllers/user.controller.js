@@ -40,7 +40,7 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { userType } = req.params;
-    const { email, password } = req.payload;
+    const { email, password } = req.body;
     const user = await userAction.findOneUser({ where: { email, userType } });
     if (!user) {
       const e = new Error('User not registered');
