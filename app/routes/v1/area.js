@@ -5,6 +5,6 @@ module.exports = (router) => {
   router.get('/country/:countryId', areaController.getOneCountry);
   router.get('/province', areaController.getAllProvinces);
   router.get('/province/:provinceId', areaController.getOneProvince);
-  router.get('/district', areaController.getAllDistrict);
-  router.get('/district/:districtId', areaController.getOneDistrict);
+  router.get('/regency', areaController.getAllRegencies);
+  router.get('/regency/:regencyId', areaController.getOneRegency);
 };

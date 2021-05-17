@@ -1,13 +1,13 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../database/sequelize');
 
-const District = sequelize.define('District', {
-  districtId: {
+const Regency = sequelize.define('Regency', {
+  regencyId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  districtName: {
+  regencyName: {
     type: DataTypes.STRING,
     allowNull: false
   },
@@ -17,7 +17,7 @@ const District = sequelize.define('District', {
     key: 'provinceId'
   }
 }, {
-  tableName: 'district'
+  tableName: 'regency'
 });
 
-module.exports = District;
+module.exports = Regency;

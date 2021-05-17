@@ -41,9 +41,9 @@ exports.getOneProvince = async (req, res) => {
   }
 };
 
-exports.getAllDistrict = async (req, res) => {
+exports.getAllRegencies = async (req, res) => {
   try {
-    const data = await areaAction.findAllDistricts(req.query);
+    const data = await areaAction.findAllRegencies(req.query);
 
     return responseBuilder(res, data);
   } catch (e) {
@@ -51,9 +51,9 @@ exports.getAllDistrict = async (req, res) => {
   }
 };
 
-exports.getOneDistrict = async (req, res) => {
+exports.getOneRegency = async (req, res) => {
   try {
-    const data = await areaAction.findOneDistrict(req.params);
+    const data = await areaAction.findOneRegency(req.params);
 
     return responseBuilder(res, data);
   } catch (e) {

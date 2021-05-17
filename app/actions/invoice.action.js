@@ -5,7 +5,7 @@ exports.createInvoice = async (data, transaction) => {
   return query;
 };
 
-exports.findAllInvoice = async (options) => {
+exports.findAllInvoices = async (options) => {
   const query = await Invoice.findAll({ ...options });
   return query;
 };

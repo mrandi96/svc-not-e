@@ -17,13 +17,19 @@ const Shop = sequelize.define('Shop', {
     key: 'userId'
   },
   countryId: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    model: 'Country',
+    key: 'countryId'
   },
   provinceId: {
-    type: DataTypes.INTEGER
+    type: DataTypes.INTEGER,
+    model: 'Province',
+    key: 'provinceId'
   },
-  districtId: {
-    type: DataTypes.INTEGER
+  regencyId: {
+    type: DataTypes.INTEGER,
+    model: 'Regency',
+    key: 'regencyId'
   },
   addressDetail: {
     type: DataTypes.TEXT,

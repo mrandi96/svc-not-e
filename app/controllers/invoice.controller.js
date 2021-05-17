@@ -3,7 +3,7 @@ const responseBuilder = require('../helpers/responseBuilder');
 const invoiceAction = require('../actions/invoice.action');
 const invoiceProductAction = require('../actions/invoiceProduct.action');
 const productAction = require('../actions/product.action');
-const httpStatus = require('../libs/constants/httpStatus');
+const { NOT_FOUND, CONFLICT } = require('../libs/constants/httpStatus');
 
 exports.createNewInvoice = async (req, res) => {
   const transaction = await sequelize.transaction();
@@ -16,13 +16,21 @@ exports.createNewInvoice = async (req, res) => {
 
     const checkInvoiceExist = await invoiceAction
       .findOneInvoice({ where: { shopId, invoiceCode } });
-    if (checkInvoiceExist) return responseBuilder(res, `${invoiceCode} already exist`, httpStatus.CONFLICT);
+    if (checkInvoiceExist) {
+      const e = new Error(`${invoiceCode} already exist`);
+      e.status = CONFLICT;
+      throw e;
+    }
 
     let totalPrice = 0;
     if (productInsertMode === 'inside') {
       const productIds = products.map(({ productId }) => productId);
       const productList = await productAction.findAllProducts({ where: { productId: productIds } });
-      if (productIds.length !== productList.length) return responseBuilder(res, 'product(s) not found', httpStatus.NOT_FOUND);
+      if (productIds.length !== productList.length) {
+        const e = new Error('Product(s) not found');
+        e.status = NOT_FOUND;
+        throw e;
+      }
 
       totalPrice = productList.reduce((currentTotal, item, index) => {
         const currentPrice = +item.productPrice * +products[index].quantity;
@@ -50,12 +58,13 @@ exports.createNewInvoice = async (req, res) => {
         productId, productName, productPrice, quantity
       } = product;
       if (productInsertMode === 'inside') {
-        return {
-          productId, quantity, invoiceId
-        };
+        return { productId, quantity, invoiceId };
       }
       return {
-        productName, productPrice, quantity, invoiceId
+        productName,
+        productPrice,
+        quantity,
+        invoiceId
       };
     });
 
@@ -63,7 +72,7 @@ exports.createNewInvoice = async (req, res) => {
 
     transaction.commit();
 
-    return responseBuilder(res, 'invoice created', httpStatus.CREATED);
+    return responseBuilder(res, 'Invoice created', true);
   } catch (e) {
     transaction.rollback();
     return responseBuilder(res, e);
@@ -73,7 +82,7 @@ exports.createNewInvoice = async (req, res) => {
 exports.getShopInvoices = async (req, res) => {
   try {
     const { shopId } = req.params;
-    const data = await invoiceAction.findAllInvoice({
+    const data = await invoiceAction.findAllInvoices({
       where: { shopId },
       order: [['createdAt', 'DESC']]
     });
@@ -88,7 +97,11 @@ exports.getShopInvoiceDetails = async (req, res) => {
   try {
     const { shopId, invoiceId: id } = req.params;
     const query = await invoiceAction.nestedInvoice(shopId, id);
-    if (!query) return responseBuilder(res, 'invoice not found', httpStatus.NOT_FOUND);
+    if (!query) {
+      const e = new Error('Invoice not found');
+      e.status = NOT_FOUND;
+      throw e;
+    }
 
     const {
       invoiceId, invoiceCode, totalPrice, productInsertMode, customerName, createdAt, InvoiceProduct

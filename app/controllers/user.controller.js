@@ -3,6 +3,7 @@ const bcrypt = require('../libs/bcrypt');
 const userAction = require('../actions/user.action');
 const httpStatus = require('../libs/constants/httpStatus');
 const responseBuilder = require('../helpers/responseBuilder');
+const { UNAUTHORIZED, NOT_FOUND, CONFLICT } = require('../libs/constants/httpStatus');
 
 exports.listAllUsers = async (req, res) => {
   try {
@@ -16,18 +17,19 @@ exports.listAllUsers = async (req, res) => {
 exports.registerUser = async (req, res) => {
   try {
     const { userType } = req.params;
-    let { body } = req;
-    const { email, password } = req.body;
+    const { email, password } = req.payload;
     const userExist = await userAction.findOneUser({ where: { email } });
     if (userExist) {
-      return responseBuilder(res, 'Email already registered', httpStatus.CONFLICT);
+      const e = new Error('User already registered');
+      e.status = CONFLICT;
+      throw e;
     }
-    body = {
-      ...body,
+    const payload = {
+      ...req.body,
       userType,
       password: await bcrypt.hash(password)
     };
-    const message = await userAction.createUser(body);
+    const message = await userAction.createUser(payload);
 
     return responseBuilder(res, message, httpStatus.CREATED);
   } catch (e) {
@@ -38,14 +40,18 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { userType } = req.params;
-    const { email, password } = req.body;
+    const { email, password } = req.payload;
     const user = await userAction.findOneUser({ where: { email, userType } });
     if (!user) {
-      return responseBuilder(res, 'User not registered', httpStatus.NOT_FOUND);
+      const e = new Error('User not registered');
+      e.status = NOT_FOUND;
+      throw e;
     }
     const isValid = await user.isValid(password);
     if (!isValid) {
-      return responseBuilder(res, 'Email/password is invalid', httpStatus.UNAUTHORIZED);
+      const e = new Error('Email/password is invalid');
+      e.status = UNAUTHORIZED;
+      throw e;
     }
 
     const { userId, fullName, contactNumber } = user;

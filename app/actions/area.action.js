@@ -1,7 +1,7 @@
 const {
   Country,
   Province,
-  District
+  Regency
 } = require('../models');
 const { NOT_FOUND } = require('../libs/constants/httpStatus');
 
@@ -12,12 +12,12 @@ exports.findAllCountries = async (where) => {
 
 exports.findOneCountry = async (where) => {
   const query = await Country.findOne({ where });
-
   if (!query) {
     const e = new Error('Country not found');
     e.status = NOT_FOUND;
     throw e;
   }
+
   return query;
 };
 
@@ -37,15 +37,15 @@ exports.findOneProvince = async (where) => {
   return query;
 };
 
-exports.findAllDistricts = async (where) => {
-  const query = await District.findAll({ where });
+exports.findAllRegencies = async (where) => {
+  const query = await Regency.findAll({ where });
   return query;
 };
 
-exports.findOneDistrict = async (where) => {
-  const query = await District.findOne({ where });
+exports.findOneRegency = async (where) => {
+  const query = await Regency.findOne({ where });
   if (!query) {
-    const e = new Error('District not found');
+    const e = new Error('Regency not found');
     e.status = NOT_FOUND;
     throw e;
   }

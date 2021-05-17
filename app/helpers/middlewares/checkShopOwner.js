@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
   const { shopId } = req.params;
   const isShopOwner = await shopAction.checkShopOwner(shopId, userId);
 
-  if (!isShopOwner) return responseBuilder(res, 'you do not have access to this shop', httpStatus.UNAUTHORIZED);
+  if (!isShopOwner) return responseBuilder(res, 'You do not have access to this shop', httpStatus.UNAUTHORIZED);
 
   return next();
 };
