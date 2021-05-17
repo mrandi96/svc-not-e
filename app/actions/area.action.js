@@ -52,3 +52,9 @@ exports.findOneRegency = async (where) => {
 
   return query;
 };
+
+exports.checkAreaExist = async (countryId, provinceId, regencyId) => {
+  await this.findOneCountry({ countryId });
+  await this.findOneProvince({ provinceId, countryId });
+  await this.findOneRegency({ regencyId, provinceId });
+};

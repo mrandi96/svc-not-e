@@ -8,6 +8,8 @@ module.exports = (router) => {
   router.post('/', authCheck, shopController.registerShop);
   router.get('/', authCheck, shopController.findOwnerShops);
   router.get('/:shopId', authCheck, shopController.ownerShopDetail);
+  router.put('/:shopId', authCheck, shopController.updateShop);
+  router.delete('/:shopId', authCheck, shopController.deleteShop);
 
   router.post('/:shopId/invoice', authCheck, checkShopOwner, invoiceController.createNewInvoice);
   router.get('/:shopId/invoice', authCheck, checkShopOwner, invoiceController.getShopInvoices);
