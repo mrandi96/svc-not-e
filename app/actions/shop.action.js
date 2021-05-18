@@ -15,12 +15,18 @@ exports.createShop = async (data) => {
 };
 
 exports.findAllShops = async (options) => {
-  const query = await Shop.findAll({ ...options });
+  const query = await Shop.findAll({
+    ...options,
+    include: ['Country', 'Province', 'Regency']
+  });
   return query;
 };
 
 exports.findOneShop = async (where, type = NOT_FOUND) => {
-  const query = await Shop.findOne({ where });
+  const query = await Shop.findOne({
+    where,
+    include: ['Country', 'Province', 'Regency']
+  });
   if (!query && type === NOT_FOUND) {
     const e = new Error('Shop not found');
     e.status = NOT_FOUND;

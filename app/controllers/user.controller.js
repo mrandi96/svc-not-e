@@ -63,3 +63,29 @@ exports.loginUser = async (req, res) => {
     return responseBuilder(res, e);
   }
 };
+
+exports.changePassword = async (req, res) => {
+  try {
+    const { userType } = req.params;
+    const { email, password, newPassword } = req.body;
+    const user = await userAction.findOneUser({ where: { email, userType } });
+    if (!user) {
+      const e = new Error('User not registered');
+      e.status = NOT_FOUND;
+      throw e;
+    }
+    const isValid = await user.isValid(password);
+    if (!isValid) {
+      const e = new Error('Email/password is invalid');
+      e.status = UNAUTHORIZED;
+      throw e;
+    }
+
+    await userAction
+      .updateUser({ password: await bcrypt.hash(newPassword) }, { where: { email, userType } });
+
+    return responseBuilder(res, 'Change password success');
+  } catch (e) {
+    return responseBuilder(res, e);
+  }
+};

@@ -1,11 +1,11 @@
 const User = require('./user');
+const Country = require('./country');
+const Province = require('./province');
+const Regency = require('./regency');
 const Shop = require('./shop');
 const Invoice = require('./invoice');
 const Product = require('./product');
 const InvoiceProduct = require('./invoiceProduct');
-const Country = require('./country');
-const Province = require('./province');
-const Regency = require('./regency');
 
 User.hasMany(Shop, { foreignKey: { name: 'ownerId' }, as: 'Shop' });
 

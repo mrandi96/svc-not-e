@@ -5,6 +5,6 @@ module.exports = {
   SALT_ROUND: 10,
   JWT_SECRET_KEY: 'my#1jwTSup3rS3cr3tK3y()',
   JWT_EXPIRE_TIME: '3h',
-  DEBUG_MODE: 'error',
+  DEBUG_MODE: false,
   PRODUCTION: false
 };

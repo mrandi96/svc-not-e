@@ -4,4 +4,5 @@ module.exports = (router) => {
   router.get('/', userController.listAllUsers);
   router.post('/register/:userType', userController.registerUser);
   router.post('/login/:userType', userController.loginUser);
+  router.put('/change-password/:userType', userController.changePassword);
 };
