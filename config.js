@@ -7,5 +7,5 @@ module.exports = {
   JWT_EXPIRE_TIME: '3h',
   DEBUG_MODE: false,
   PRODUCTION: false,
-  LANG: 'en'
+  LANG: 'id'
 };
