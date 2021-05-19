@@ -3,7 +3,9 @@ const bcrypt = require('../libs/bcrypt');
 const userAction = require('../actions/user.action');
 const httpStatus = require('../libs/constants/httpStatus');
 const responseBuilder = require('../helpers/responseBuilder');
-const { UNAUTHORIZED, NOT_FOUND, CONFLICT } = require('../libs/constants/httpStatus');
+const { CONFLICT } = require('../libs/constants/httpStatus');
+const STRING = require('../libs/constants/string');
+const { errorUnauthorized } = require('../helpers/errorHandler');
 
 exports.listAllUsers = async (req, res) => {
   try {
@@ -18,12 +20,7 @@ exports.registerUser = async (req, res) => {
   try {
     const { userType } = req.params;
     const { email, password } = req.payload;
-    const userExist = await userAction.findOneUser({ where: { email } });
-    if (userExist) {
-      const e = new Error('User already registered');
-      e.status = CONFLICT;
-      throw e;
-    }
+    await userAction.findOneUser({ email }, CONFLICT);
     const payload = {
       ...req.body,
       userType,
@@ -41,18 +38,9 @@ exports.loginUser = async (req, res) => {
   try {
     const { userType } = req.params;
     const { email, password } = req.body;
-    const user = await userAction.findOneUser({ where: { email, userType } });
-    if (!user) {
-      const e = new Error('User not registered');
-      e.status = NOT_FOUND;
-      throw e;
-    }
+    const user = await userAction.findOneUser({ email, userType });
     const isValid = await user.isValid(password);
-    if (!isValid) {
-      const e = new Error('Email/password is invalid');
-      e.status = UNAUTHORIZED;
-      throw e;
-    }
+    if (!isValid) errorUnauthorized(STRING().ERROR.UNAUTHORIZED.USER);
 
     const { userId, fullName, contactNumber } = user;
 
@@ -68,23 +56,13 @@ exports.changePassword = async (req, res) => {
   try {
     const { userType } = req.params;
     const { email, password, newPassword } = req.body;
-    const user = await userAction.findOneUser({ where: { email, userType } });
-    if (!user) {
-      const e = new Error('User not registered');
-      e.status = NOT_FOUND;
-      throw e;
-    }
+    const user = await userAction.findOneUser({ email, userType });
     const isValid = await user.isValid(password);
-    if (!isValid) {
-      const e = new Error('Email/password is invalid');
-      e.status = UNAUTHORIZED;
-      throw e;
-    }
+    if (!isValid) errorUnauthorized(STRING().ERROR.UNAUTHORIZED.USER);
 
-    await userAction
-      .updateUser({ password: await bcrypt.hash(newPassword) }, { where: { email, userType } });
+    const message = await userAction.changeUserPassword(newPassword, { email, userType });
 
-    return responseBuilder(res, 'Change password success');
+    return responseBuilder(res, message);
   } catch (e) {
     return responseBuilder(res, e);
   }

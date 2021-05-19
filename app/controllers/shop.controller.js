@@ -1,5 +1,4 @@
 const shopAction = require('../actions/shop.action');
-const httpStatus = require('../libs/constants/httpStatus');
 const responseBuilder = require('../helpers/responseBuilder');
 
 exports.registerShop = async (req, res) => {
@@ -18,7 +17,7 @@ exports.registerShop = async (req, res) => {
 exports.findOwnerShops = async (req, res) => {
   try {
     const { userId: ownerId } = req.user;
-    const data = await shopAction.findAllShops({ where: { ownerId } });
+    const data = await shopAction.findAllShops({ ownerId });
 
     return responseBuilder(res, data);
   } catch (e) {
@@ -44,8 +43,7 @@ exports.deleteShop = async (req, res) => {
   try {
     const { userId: ownerId } = req.user;
     const { shopId } = req.params;
-    const where = { ownerId, shopId };
-    const message = await shopAction.deleteShop(where);
+    const message = await shopAction.deleteShop({ ownerId, shopId });
 
     return responseBuilder(res, message);
   } catch (e) {
@@ -59,7 +57,6 @@ exports.ownerShopDetail = async (req, res) => {
     const { shopId } = req.params;
 
     const data = await shopAction.findOneShop({ ownerId, shopId });
-    if (!data) return responseBuilder(res, 'Shop not found', httpStatus.NOT_FOUND);
 
     return responseBuilder(res, data);
   } catch (e) {

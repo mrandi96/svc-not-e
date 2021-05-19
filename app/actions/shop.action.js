@@ -1,6 +1,8 @@
 const { Shop } = require('../models');
 const { checkAreaExist } = require('./area.action');
 const { NOT_FOUND, CONFLICT } = require('../libs/constants/httpStatus');
+const STRING = require('../libs/constants/string');
+const { errorNotFound, errorConflict } = require('../helpers/errorHandler');
 
 exports.createShop = async (data) => {
   const {
@@ -9,14 +11,14 @@ exports.createShop = async (data) => {
   } = data;
   await checkAreaExist(countryId, provinceId, regencyId);
   await this.findOneShop({ ownerId, shopName }, CONFLICT);
-
   await Shop.create(data);
-  return 'Shop created';
+
+  return STRING().SUCCESS.CREATE.SHOP;
 };
 
-exports.findAllShops = async (options) => {
+exports.findAllShops = async (where) => {
   const query = await Shop.findAll({
-    ...options,
+    where,
     include: ['Country', 'Province', 'Regency']
   });
   return query;
@@ -28,13 +30,9 @@ exports.findOneShop = async (where, type = NOT_FOUND) => {
     include: ['Country', 'Province', 'Regency']
   });
   if (!query && type === NOT_FOUND) {
-    const e = new Error('Shop not found');
-    e.status = NOT_FOUND;
-    throw e;
+    errorNotFound(STRING().ERROR.NOT_FOUND.SHOP);
   } else if (query && type === CONFLICT) {
-    const e = new Error('Shop already exist');
-    e.status = CONFLICT;
-    throw e;
+    errorConflict(STRING().ERROR.CONFLICT.SHOP);
   }
 
   return query;
@@ -52,14 +50,14 @@ exports.updateShop = async (data, where) => {
   await checkAreaExist(countryId, provinceId, regencyId);
   await Shop.update(data, { where });
 
-  return 'Shop updated';
+  return STRING().SUCCESS.UPDATE.SHOP;
 };
 
 exports.deleteShop = async (where) => {
   await this.findOneShop(where);
 
   await Shop.destroy({ where });
-  return 'Shop deleted';
+  return STRING().SUCCESS.DELETE.SHOP;
 };
 
 exports.checkShopOwner = async (shopId, ownerId) => {

@@ -1,11 +1,13 @@
 const { CONFLICT, NOT_FOUND } = require('../libs/constants/httpStatus');
 const { Product } = require('../models');
+const STRING = require('../libs/constants/string');
+const { errorConflict, errorNotFound } = require('../helpers/errorHandler');
 
 exports.createProduct = async (data, where) => {
   await this.findOneProduct(where, CONFLICT);
   await Product.create(data);
 
-  return 'Product created';
+  return STRING().SUCCESS.CREATE.PRODUCT;
 };
 
 exports.findAllProducts = async (where) => {
@@ -17,13 +19,9 @@ exports.findAllProducts = async (where) => {
 exports.findOneProduct = async (where, type = NOT_FOUND) => {
   const query = await Product.findOne({ where });
   if (query && type === CONFLICT) {
-    const e = new Error('Product name already exist');
-    e.status = CONFLICT;
-    throw e;
+    errorConflict(STRING().ERROR.CONFLICT.PRODUCT);
   } else if (!query && type === NOT_FOUND) {
-    const e = new Error('Product not found');
-    e.status = NOT_FOUND;
-    throw e;
+    errorNotFound(STRING().ERROR.NOT_FOUND.PRODUCT);
   }
 
   return query;
@@ -34,12 +32,12 @@ exports.updateProduct = async (data, where, conflictWhere) => {
   await this.findOneProduct(conflictWhere, CONFLICT);
   await Product.update(data, { where });
 
-  return 'Product updated';
+  return STRING().SUCCESS.UPDATE.PRODUCT;
 };
 
 exports.deleteProduct = async (where) => {
   await this.findOneProduct(where);
   await Product.destroy({ where });
 
-  return 'Product deleted';
+  return STRING().SUCCESS.DELETE.PRODUCT;
 };

@@ -3,7 +3,25 @@ const responseBuilder = require('../helpers/responseBuilder');
 const invoiceAction = require('../actions/invoice.action');
 const invoiceProductAction = require('../actions/invoiceProduct.action');
 const productAction = require('../actions/product.action');
-const { NOT_FOUND, CONFLICT } = require('../libs/constants/httpStatus');
+const { errorNotFound } = require('../helpers/errorHandler');
+const STRING = require('../libs/constants/string');
+
+const invoiceProductParser = (InvoiceProduct = [], mode) => InvoiceProduct.map(({
+  invoiceProductId, productId, quantity, Product, ...rest
+}) => {
+  let productName = String(rest.productName);
+  let productPrice = Number(rest.productPrice);
+  if (mode === 'inside') {
+    productName = String(Product.productName);
+    productPrice = Number(Product.productPrice);
+  }
+  return {
+    invoiceProductId,
+    productName,
+    productPrice,
+    quantity
+  };
+});
 
 exports.createNewInvoice = async (req, res) => {
   const transaction = await sequelize.transaction();
@@ -14,23 +32,13 @@ exports.createNewInvoice = async (req, res) => {
       invoiceCode, productInsertMode, customerName, products
     } = req.body;
 
-    const checkInvoiceExist = await invoiceAction
-      .findOneInvoice({ where: { shopId, invoiceCode } });
-    if (checkInvoiceExist) {
-      const e = new Error(`${invoiceCode} already exist`);
-      e.status = CONFLICT;
-      throw e;
-    }
+    await invoiceAction.findOneInvoice({ shopId, invoiceCode });
 
     let totalPrice = 0;
     if (productInsertMode === 'inside') {
       const productIds = products.map(({ productId }) => productId);
       const productList = await productAction.findAllProducts({ where: { productId: productIds } });
-      if (productIds.length !== productList.length) {
-        const e = new Error('Product(s) not found');
-        e.status = NOT_FOUND;
-        throw e;
-      }
+      if (productIds.length !== productList.length) errorNotFound(STRING().ERROR.NOT_FOUND.PRODUCT);
 
       totalPrice = productList.reduce((currentTotal, item, index) => {
         const currentPrice = +item.productPrice * +products[index].quantity;
@@ -68,11 +76,12 @@ exports.createNewInvoice = async (req, res) => {
       };
     });
 
-    await invoiceProductAction.bulkCreateInvoiceProduct(invoiceProductBody, transaction);
+    const message = await invoiceProductAction
+      .bulkCreateInvoiceProduct(invoiceProductBody, transaction);
 
     transaction.commit();
 
-    return responseBuilder(res, 'Invoice created', true);
+    return responseBuilder(res, message, true);
   } catch (e) {
     transaction.rollback();
     return responseBuilder(res, e);
@@ -82,10 +91,7 @@ exports.createNewInvoice = async (req, res) => {
 exports.getShopInvoices = async (req, res) => {
   try {
     const { shopId } = req.params;
-    const data = await invoiceAction.findAllInvoices({
-      where: { shopId },
-      order: [['createdAt', 'DESC']]
-    });
+    const data = await invoiceAction.findAllInvoices({ shopId });
 
     return responseBuilder(res, data);
   } catch (e) {
@@ -97,32 +103,13 @@ exports.getShopInvoiceDetails = async (req, res) => {
   try {
     const { shopId, invoiceId: id } = req.params;
     const query = await invoiceAction.nestedInvoice(shopId, id);
-    if (!query) {
-      const e = new Error('Invoice not found');
-      e.status = NOT_FOUND;
-      throw e;
-    }
 
     const {
-      invoiceId, invoiceCode, totalPrice, productInsertMode, customerName, createdAt, InvoiceProduct
+      invoiceId, invoiceCode, totalPrice, productInsertMode,
+      customerName, createdAt, InvoiceProduct
     } = query;
 
-    const products = InvoiceProduct.map(({
-      invoiceProductId, productId, quantity, Product, ...rest
-    }) => {
-      let productName = String(rest.productName);
-      let productPrice = Number(rest.productPrice);
-      if (productInsertMode === 'inside') {
-        productName = String(Product.productName);
-        productPrice = Number(Product.productPrice);
-      }
-      return {
-        invoiceProductId,
-        productName,
-        productPrice,
-        quantity
-      };
-    });
+    const products = invoiceProductParser(InvoiceProduct, productInsertMode);
 
     const data = {
       invoiceId,

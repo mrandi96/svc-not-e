@@ -3,7 +3,8 @@ const {
   Province,
   Regency
 } = require('../models');
-const { NOT_FOUND } = require('../libs/constants/httpStatus');
+const STRING = require('../libs/constants/string');
+const { errorNotFound } = require('../helpers/errorHandler');
 
 exports.findAllCountries = async (where) => {
   const query = await Country.findAll({ where });
@@ -12,11 +13,7 @@ exports.findAllCountries = async (where) => {
 
 exports.findOneCountry = async (where) => {
   const query = await Country.findOne({ where });
-  if (!query) {
-    const e = new Error('Country not found');
-    e.status = NOT_FOUND;
-    throw e;
-  }
+  if (!query) errorNotFound(STRING().ERROR.NOT_FOUND.COUNTRY);
 
   return query;
 };
@@ -28,11 +25,7 @@ exports.findAllProvinces = async (where) => {
 
 exports.findOneProvince = async (where) => {
   const query = await Province.findOne({ where });
-  if (!query) {
-    const e = new Error('Province not found');
-    e.status = NOT_FOUND;
-    throw e;
-  }
+  if (!query) errorNotFound(STRING().ERROR.NOT_FOUND.PROVINCE);
 
   return query;
 };
@@ -44,11 +37,7 @@ exports.findAllRegencies = async (where) => {
 
 exports.findOneRegency = async (where) => {
   const query = await Regency.findOne({ where });
-  if (!query) {
-    const e = new Error('Regency not found');
-    e.status = NOT_FOUND;
-    throw e;
-  }
+  if (!query) errorNotFound(STRING().ERROR.NOT_FOUND.REGENCY);
 
   return query;
 };
