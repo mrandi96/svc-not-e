@@ -19,7 +19,7 @@ exports.listAllUsers = async (req, res) => {
 exports.registerUser = async (req, res) => {
   try {
     const { userType } = req.params;
-    const { email, password } = req.payload;
+    const { email, password } = req.body;
     await userAction.findOneUser({ email }, CONFLICT);
     const payload = {
       ...req.body,
