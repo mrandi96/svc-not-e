@@ -11,7 +11,7 @@ exports.createInvoice = async (data, transaction) => {
 exports.findAllInvoices = async (where) => {
   const query = await Invoice.findAll({
     where,
-    include: [['createdAt', 'DESC']]
+    order: [['createdAt', 'DESC']]
   });
   return query;
 };

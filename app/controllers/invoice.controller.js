@@ -5,6 +5,7 @@ const invoiceProductAction = require('../actions/invoiceProduct.action');
 const productAction = require('../actions/product.action');
 const { errorNotFound } = require('../helpers/errorHandler');
 const STRING = require('../libs/constants/string');
+const { CONFLICT } = require('../libs/constants/httpStatus');
 
 const invoiceProductParser = (InvoiceProduct = [], mode) => InvoiceProduct.map(({
   invoiceProductId, productId, quantity, Product, ...rest
@@ -32,12 +33,12 @@ exports.createNewInvoice = async (req, res) => {
       invoiceCode, productInsertMode, customerName, products
     } = req.body;
 
-    await invoiceAction.findOneInvoice({ shopId, invoiceCode });
+    await invoiceAction.findOneInvoice({ shopId, invoiceCode }, CONFLICT);
 
     let totalPrice = 0;
     if (productInsertMode === 'inside') {
       const productIds = products.map(({ productId }) => productId);
-      const productList = await productAction.findAllProducts({ where: { productId: productIds } });
+      const productList = await productAction.findAllProducts({ productId: productIds });
       if (productIds.length !== productList.length) errorNotFound(STRING().ERROR.NOT_FOUND.PRODUCT);
 
       totalPrice = productList.reduce((currentTotal, item, index) => {

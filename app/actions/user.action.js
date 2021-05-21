@@ -24,7 +24,7 @@ exports.findOneUser = async (where, type = NOT_FOUND) => {
 
 exports.updateUser = async (data, where, conflictWhere) => {
   await this.findOneUser(where);
-  await this.findOneUser(conflictWhere, CONFLICT);
+  if (conflictWhere) await this.findOneUser(conflictWhere, CONFLICT);
   await User.update(data, { where });
 
   return STRING().SUCCESS.UPDATE.USER;
