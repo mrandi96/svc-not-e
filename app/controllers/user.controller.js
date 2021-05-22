@@ -63,9 +63,23 @@ exports.loginUser = async (req, res) => {
 exports.getUser = async (req, res) => {
   try {
     const { userId } = req.user;
-    const data = await userAction.findOneUser({ userId });
+    const {
+      email,
+      fullName,
+      contactNumber,
+      address,
+      userType,
+      createdAt
+    } = await userAction.findOneUser({ userId });
 
-    return responseBuilder(res, data);
+    return responseBuilder(res, {
+      email,
+      fullName,
+      contactNumber,
+      address,
+      userType,
+      createdAt
+    });
   } catch (e) {
     return responseBuilder(res, e);
   }
