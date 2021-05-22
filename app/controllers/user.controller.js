@@ -43,15 +43,12 @@ exports.loginUser = async (req, res) => {
     if (!isValid) errorUnauthorized(STRING().ERROR.UNAUTHORIZED.USER);
 
     const {
-      userId, fullName,
-      contactNumber, userType: type
+      userId, userType: type
     } = user;
 
     const token = jwt.sign({
       userId,
-      userType: type,
-      fullName,
-      contactNumber
+      userType: type
     });
 
     return responseBuilder(res, { token });
