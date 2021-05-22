@@ -2,7 +2,8 @@ const {
   NOT_FOUND,
   CONFLICT,
   UNAUTHORIZED,
-  BAD_REQUEST
+  BAD_REQUEST,
+  FORBIDDEN
 } = require('../libs/constants/httpStatus');
 
 exports.errorNotFound = (message) => {
@@ -20,6 +21,12 @@ exports.errorConflict = (message) => {
 exports.errorUnauthorized = (message) => {
   const e = new Error(message);
   e.status = UNAUTHORIZED;
+  throw e;
+};
+
+exports.erorrForbidden = (message) => {
+  const e = new Error(message);
+  e.status = FORBIDDEN;
   throw e;
 };
 

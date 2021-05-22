@@ -42,11 +42,30 @@ exports.loginUser = async (req, res) => {
     const isValid = await user.isValid(password);
     if (!isValid) errorUnauthorized(STRING().ERROR.UNAUTHORIZED.USER);
 
-    const { userId, fullName, contactNumber } = user;
+    const {
+      userId, fullName,
+      contactNumber, userType: type
+    } = user;
 
-    const token = jwt.sign({ userId, fullName, contactNumber });
+    const token = jwt.sign({
+      userId,
+      userType: type,
+      fullName,
+      contactNumber
+    });
 
     return responseBuilder(res, { token });
+  } catch (e) {
+    return responseBuilder(res, e);
+  }
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const data = await userAction.findOneUser({ userId });
+
+    return responseBuilder(res, data);
   } catch (e) {
     return responseBuilder(res, e);
   }
