@@ -55,8 +55,9 @@ exports.loginUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const { userId } = req.user;
-    const { fullName, contactNumber } = req.body;
-    const message = await userAction.updateUser({ fullName, contactNumber }, { userId }, false);
+    const { fullName, contactNumber, address } = req.body;
+    const message = await userAction
+      .updateUser({ fullName, contactNumber, address }, { userId }, false);
 
     return responseBuilder(res, message);
   } catch (e) {

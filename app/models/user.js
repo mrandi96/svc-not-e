@@ -25,6 +25,9 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  address: {
+    type: DataTypes.TEXT
+  },
   userType: {
     type: DataTypes.ENUM('owner', 'customer')
   }

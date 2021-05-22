@@ -9,8 +9,8 @@ exports.createUser = async (data) => {
   return STRING().SUCCESS.CREATE.USER;
 };
 
-exports.findAllUser = async (options) => {
-  const query = await User.findAll({ ...options });
+exports.findAllUser = async (where = {}) => {
+  const query = await User.findAll({ where });
   return query;
 };
 
@@ -37,7 +37,7 @@ exports.deleteUser = async (options) => {
 
 exports.changeUserPassword = async (newPassword, where) => {
   const password = await bcrypt.hash(newPassword);
-  await User.update({ password }, where);
+  await User.update({ password }, { where });
 
   return STRING().SUCCESS.UPDATE.PASSWORD;
 };
