@@ -22,9 +22,9 @@ exports.authCheck = (...userFilter) => async (req, res, next) => {
     const token = await getBearerToken(req);
     const decoded = verify(token);
     const { userType } = decoded;
-    if (isError(decoded)) return errorUnauthorized(decoded.message);
+    if (isError(decoded)) errorUnauthorized(decoded.message);
     if (userFilter.length > 0 && !handleUserFilterInput(userFilter).includes(userType)) {
-      return erorrForbidden('Restricted Access');
+      erorrForbidden();
     }
 
     req.user = decoded;

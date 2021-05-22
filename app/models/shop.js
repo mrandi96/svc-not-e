@@ -31,7 +31,7 @@ const Shop = sequelize.define('Shop', {
     model: 'Regency',
     key: 'regencyId'
   },
-  addressDetail: {
+  address: {
     type: DataTypes.TEXT,
     allowNull: false
   },

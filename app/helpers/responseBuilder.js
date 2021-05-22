@@ -1,10 +1,13 @@
-const httpStatus = require('../libs/constants/httpStatus');
+const {
+  CREATED,
+  OK,
+  INTERNAL_SERVER_ERROR
+} = require('../libs/constants/httpStatus');
 const { isError } = require('./common');
 const debug = require('../libs/debug');
 
 module.exports = (res, value, isPost = false) => {
-  let status = httpStatus.OK;
-  if (isPost) status = httpStatus.CREATED;
+  let status = isPost ? CREATED : OK;
   const response = {
     timestamp: new Date().toISOString(),
     error: false,
@@ -12,7 +15,7 @@ module.exports = (res, value, isPost = false) => {
   };
 
   if (isError(value)) {
-    status = value.status || httpStatus.INTERNAL_SERVER_ERROR;
+    status = value.status || INTERNAL_SERVER_ERROR;
     response.status = status;
     response.error = true;
     response.message = value.message;
