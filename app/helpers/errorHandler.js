@@ -24,7 +24,7 @@ exports.errorUnauthorized = (message = 'Unauthorized') => {
   throw e;
 };
 
-exports.erorrForbidden = (message = 'Restricted Access') => {
+exports.errorForbidden = (message = 'Restricted Access') => {
   const e = new Error(message);
   e.status = FORBIDDEN;
   throw e;

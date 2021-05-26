@@ -1,9 +1,9 @@
 const { verify } = require('../../libs/jwt');
 const responseBuilder = require('../responseBuilder');
 const { isError } = require('../common');
-const { errorUnauthorized, erorrForbidden } = require('../errorHandler');
+const { errorUnauthorized, errorForbidden } = require('../errorHandler');
 
-const getBearerToken = async (req) => {
+const getBearerToken = (req) => {
   const authorization = req.headers.authorization || '';
   const [bearer, token] = authorization.split(' ');
   if (bearer === 'Bearer') return token;
@@ -17,14 +17,14 @@ const handleUserFilterInput = (userFilter) => {
   throw new Error();
 };
 
-exports.authCheck = (...userFilter) => async (req, res, next) => {
+exports.authCheck = (...userFilter) => (req, res, next) => {
   try {
-    const token = await getBearerToken(req);
+    const token = getBearerToken(req);
     const decoded = verify(token);
     const { userType } = decoded;
     if (isError(decoded)) errorUnauthorized(decoded.message);
     if (userFilter.length > 0 && !handleUserFilterInput(userFilter).includes(userType)) {
-      erorrForbidden();
+      errorForbidden();
     }
 
     req.user = decoded;

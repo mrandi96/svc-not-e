@@ -42,12 +42,12 @@ exports.createNewInvoice = async (req, res) => {
       if (productIds.length !== productList.length) errorNotFound(STRING().ERROR.NOT_FOUND.PRODUCT);
 
       totalPrice = productList.reduce((currentTotal, item, index) => {
-        const currentPrice = +item.productPrice * +products[index].quantity;
+        const currentPrice = Number(item.productPrice) * Number(products[index].quantity);
         return currentTotal + currentPrice;
       }, 0);
     } else if (productInsertMode === 'outside') {
       totalPrice = products.reduce((currentTotal, item) => {
-        const currentPrice = +item.productPrice * +item.quantity;
+        const currentPrice = Number(item.productPrice) * Number(item.quantity);
         return currentTotal + currentPrice;
       }, 0);
     }
@@ -103,7 +103,7 @@ exports.getShopInvoices = async (req, res) => {
 exports.getShopInvoiceDetails = async (req, res) => {
   try {
     const { shopId, invoiceId: id } = req.params;
-    const query = await invoiceAction.nestedInvoice(shopId, id);
+    const query = await invoiceAction.nestedInvoice({ shopId, invoiceId: id });
 
     const {
       invoiceId, invoiceCode, totalPrice, productInsertMode,

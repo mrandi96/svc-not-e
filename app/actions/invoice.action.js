@@ -39,9 +39,9 @@ exports.deleteInvoice = async (options) => {
   return STRING().SUCCESS.DELETE.INVOICE;
 };
 
-exports.nestedInvoice = async (shopId, invoiceId) => {
+exports.nestedInvoice = async (where) => {
   const query = await Invoice.findOne({
-    where: { shopId, invoiceId },
+    where,
     include: [
       {
         model: InvoiceProduct,

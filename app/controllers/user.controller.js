@@ -5,7 +5,7 @@ const httpStatus = require('../libs/constants/httpStatus');
 const responseBuilder = require('../helpers/responseBuilder');
 const { CONFLICT } = require('../libs/constants/httpStatus');
 const STRING = require('../libs/constants/string');
-const { errorUnauthorized, erorrForbidden } = require('../helpers/errorHandler');
+const { errorUnauthorized, errorForbidden } = require('../helpers/errorHandler');
 
 exports.listAllUsers = async (req, res) => {
   try {
@@ -19,9 +19,9 @@ exports.listAllUsers = async (req, res) => {
 exports.registerUser = async (req, res) => {
   try {
     const { userType } = req.params;
-    if (userType === 'admin') erorrForbidden();
+    if (userType === 'admin') errorForbidden();
     const { email, password } = req.body;
-    await userAction.findOneUser({ email }, CONFLICT);
+    await userAction.findOneUser({ email, userType }, CONFLICT);
     const payload = {
       ...req.body,
       userType,
