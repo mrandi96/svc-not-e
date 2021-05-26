@@ -34,16 +34,7 @@ const insideSchema = Joi.array().min(1).items(JoiObject.keys({
 
 const outsideSchema = Joi.array().min(1).items(JoiObject.keys({
   productName: Joi.string().required(),
-  productPrice: Joi.number().min(0).not(0).required()
-    .error((errors) => {
-      errors.forEach((e) => {
-        const index = e.path[1];
-        if (['any.invalid', 'number.min'].includes(e.code)) {
-          e.message = `"products[${index}].productPrice" must be greater than 0`;
-        }
-      });
-      return errors;
-    }),
+  productPrice: Joi.number().greater(0).required(),
   quantity: Joi.number().integer().min(1).required()
 }));
 
