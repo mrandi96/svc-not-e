@@ -53,7 +53,7 @@ exports.nestedInvoice = async (where) => {
     if (!item) return null;
     return item.get({ plain: true });
   });
-  if (!query) errorNotFound(STRING().ERROR.NOT_FOUND.INVOICE);
+  if (!query) errorNotFound(STRING().ERROR.NOT_FOUND.INVOICE('Invoice'));
 
   return query;
 };

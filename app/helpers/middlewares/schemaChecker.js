@@ -67,7 +67,7 @@ const getSchema = (schemaName) => {
 
 /**
  * Middleware to be used to check json body passed from frontend
- * @param {('user'|'product'|'shop'|'invoice')} schemaName
+ * @param {('user'|'profile'|'product'|'shop'|'invoice')} schemaName
  * - input with schema name defined in schemaChecker.js
  * @returns schema
  */
