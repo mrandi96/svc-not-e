@@ -12,6 +12,12 @@ const userSchema = JoiObject.keys({
   address: Joi.string()
 });
 
+const profileSchema = JoiObject.keys({
+  fullName: Joi.string().required(),
+  contactNumber: Joi.string().required(),
+  address: Joi.string()
+});
+
 const productSchema = JoiObject.keys({
   productName: Joi.string().required(),
   productPrice: Joi.number().required()
@@ -51,6 +57,7 @@ const invoiceSchema = JoiObject.keys({
 const getSchema = (schemaName) => {
   switch (schemaName) {
     case 'user': return userSchema;
+    case 'profile': return profileSchema;
     case 'product': return productSchema;
     case 'shop': return shopSchema;
     case 'invoice': return invoiceSchema;

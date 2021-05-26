@@ -7,6 +7,6 @@ module.exports = (router) => {
   router.post('/register/:userType', validateBody('user'), userController.registerUser);
   router.post('/login/:userType', userController.loginUser);
   router.get('/profile', authCheck(), userController.getUser);
-  router.put('/profile', authCheck(), validateBody('user'), userController.updateUser);
+  router.put('/profile', authCheck(), validateBody('profile'), userController.updateUser);
   router.put('/change-password/:userType', userController.changePassword);
 };
