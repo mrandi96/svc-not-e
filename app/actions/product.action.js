@@ -5,9 +5,9 @@ const { errorConflict, errorNotFound } = require('../helpers/errorHandler');
 
 exports.createProduct = async (data, where) => {
   await this.findOneProduct(where, CONFLICT);
-  await Product.create(data);
+  const response = await Product.create(data);
 
-  return STRING().SUCCESS.CREATE.PRODUCT;
+  return response;
 };
 
 exports.findAllProducts = async (where) => {

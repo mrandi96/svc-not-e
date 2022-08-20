@@ -6,9 +6,9 @@ exports.registerShop = async (req, res) => {
     const { userId } = req.user;
     const payload = { ...req.body, ownerId: userId };
 
-    const message = await shopAction.createShop(payload);
+    const data = await shopAction.createShop(payload);
 
-    return responseBuilder(res, message, true);
+    return responseBuilder(res, data, true);
   } catch (e) {
     return responseBuilder(res, e);
   }

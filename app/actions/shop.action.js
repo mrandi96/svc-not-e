@@ -11,9 +11,9 @@ exports.createShop = async (data) => {
   } = data;
   await checkAreaExist(countryId, provinceId, regencyId);
   await this.findOneShop({ ownerId, shopName }, CONFLICT);
-  await Shop.create(data);
+  const response = await Shop.create(data);
 
-  return STRING().SUCCESS.CREATE.SHOP;
+  return response;
 };
 
 exports.findAllShops = async (where) => {

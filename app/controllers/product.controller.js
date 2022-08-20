@@ -10,9 +10,9 @@ exports.addNewProduct = async (req, res) => {
       shopId
     };
 
-    const message = await productAction.createProduct(payload, { shopId, productName });
+    const data = await productAction.createProduct(payload, { shopId, productName });
 
-    return responseBuilder(res, message, true);
+    return responseBuilder(res, data, true);
   } catch (e) {
     return responseBuilder(res, e);
   }
