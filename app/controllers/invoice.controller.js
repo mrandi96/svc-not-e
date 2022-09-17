@@ -77,12 +77,17 @@ exports.createNewInvoice = async (req, res) => {
       };
     });
 
-    const message = await invoiceProductAction
+    await invoiceProductAction
       .bulkCreateInvoiceProduct(invoiceProductBody, transaction);
 
     transaction.commit();
 
-    return responseBuilder(res, message, true);
+    const data = {
+      invoiceId,
+      ...invoiceBody,
+      totalProduct: products.length
+    };
+    return responseBuilder(res, data, true);
   } catch (e) {
     transaction.rollback();
     return responseBuilder(res, e);
