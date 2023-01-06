@@ -7,6 +7,6 @@ module.exports = {
   JWT_SECRET_KEY: 'my#1jwT~Sup3r~$3cr3t~K3y()',
   JWT_EXPIRE_TIME: '12h',
   DEBUG_MODE: false,
-  PRODUCTION: false,
+  PRODUCTION: true,
   LANG: 'en'
 };
